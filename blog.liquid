@@ -1,0 +1,8 @@
+           <ul class="blog-tabs">
+            <li><a href="{{ blogs['news'].url }}/" class="{% if current_tags == nul and blog.handle == "news" %}active{% endif %}">All</a></li>
+            {% for tag in blogs['news'].all_tags %}
+            
+              <li> <a href="{{ blogs['news'].url }}/tagged/{{ tag | handle }}"  class="{% if current_tags.first == tag %}active{% endif %}">{{tag}}</a> </li>
+           
+            {% endfor %}
+          </ul>
