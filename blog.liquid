@@ -6,3 +6,151 @@
            
             {% endfor %}
           </ul>
+
+
+
+
+
+  <!-- blog START -->
+  <div class="blog">
+      <div class="blog__inner">
+          <div class="common-wrap">
+              <div class="blog__wrapper">
+                  <div class="blog__top">
+                    {% if section.settings.heading != blank %}
+                      <h2 class="blog__heading">{{section.settings.heading}}</h2>
+                    {% endif %}
+
+                    {% liquid
+                      assign block_items = section.blocks | where: 'type', 'blog'
+                    %}
+
+
+                    
+                      <div class="blog__btn-wrapper">
+                          <button class="btn btn_full blog__btn_filter">Filter</button>
+                          <div class="blog-tab-box blog-tab-box_transform hidden">
+                               <button class="blog-tab active" data-blog-tab="all_post">All posts</button>
+
+                               {%- for block in block_items -%}
+                                {% assign  choose_blog = block.settings.choose_blog %}
+
+                              <button class="blog-tab" data-blog-tab="frame_{{block.id}}">{{ choose_blog.title }}</button>
+                            {%- endfor -%}
+
+                              {% comment %} <button class="blog-tab" data-blog-tab="frame3">Inspiration</button>
+                              <button class="blog-tab" data-blog-tab="frame4">Press</button> 
+                              <a href="{{ shop.url }}{{ blog.url }}" class="blog-tab ">All</a>
+                              {% for tag in blog.all_tags limit: 5 %}
+                                <a href="{{ shop.url }}{{ blog.url }}/tagged/{{ tag | handle }}" class="blog-tab {% if current_tags contains tag %} active {% endif %}">{{ tag | handle }}</a>
+                              {%- endfor -%} {% endcomment %}
+                          </div>
+                      </div>
+                  </div>
+
+
+               
+                  <div class="blog__items blog__items_tab active " id="all_post">
+                    {% assign blog_count = 1 %}
+                    {%- for block in block_items -%}
+                      {% assign blog_handle = block.settings.choose_blog.articles %}
+          
+                    {%- for article in blog_handle -%}
+                      {% assign blog_class = "" %}
+                      {% if blog_count == 4 or blog_count == 5  %}
+                        {% assign blog_class = "blog__item_half" %}
+                      {% endif %}
+
+                          <div class="blog__item {{blog_class}}">
+                              <a href="{{ article.url }}">
+                                  <div class="blog__img">
+                                    {%- if article.image != blank -%}
+                                      <img src="{{article.image | img_url:"master"}}" alt="">
+                                    {%- endif -%}
+                                  </div>
+                                  <div class="blog__content">
+                                      <h5 class="blog__title">{{ article.title | truncate: 75 , ''}}</h5>
+                                      <p class="blog__date">  {{ article.published_at | date: '%b' }} {{- article.published_at | date: '%d' }}, {{ article.published_at | date: '%Y' -}}</p>
+                                  </div>
+                              </a>
+                          </div>
+                          {% assign blog_count = blog_count | plus: 1 %}
+                    {%- endfor -%}
+
+                   
+
+                  {%- endfor -%}
+                  </div>
+                  {%- for block in block_items -%}
+                    {% assign blog_handle = block.settings.choose_blog.articles %}
+
+                  <div class="blog__items   blog__items_tab" id="frame_{{block.id}}">
+                    {%- for article in blog_handle -%}
+                      {% assign blog_class = "" %}
+                      {% if forloop.index == 4 or forloop.index == 5 %}
+                        {% assign blog_class = "blog__item_half" %}
+                      {% endif %}
+
+                          <div class="blog__item {{blog_class}}">
+                              <a href="{{ article.url }}">
+                                  <div class="blog__img">
+                                    {%- if article.image != blank -%}
+                                      <img src="{{article.image | img_url:"master"}}" alt="">
+                                    {%- endif -%}
+                                  </div>
+                                  <div class="blog__content">
+                                      <h5 class="blog__title">{{ article.title | truncate: 75 , ''}}</h5>
+                                      <p class="blog__date">  {{ article.published_at | date: '%b' }} {{- article.published_at | date: '%d' }}, {{ article.published_at | date: '%Y' -}}</p>
+                                  </div>
+                              </a>
+                          </div>
+
+                    {%- endfor -%}
+
+                
+                  </div>
+                {%- endfor -%}
+
+              
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- blog END -->
+
+
+
+{% schema %}
+{
+  "name": "Blog Template",
+  "enabled_on": {
+    "templates": ["blog"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Title",
+      "default": "TALES OF DESIGN"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "blog",
+      "name": "Blog",
+      "settings": [
+        {
+          "type": "blog",
+          "id": "choose_blog",
+          "label": "Select Blog"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Template"
+    }
+  ]
+}
+{% endschema %}
